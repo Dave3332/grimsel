@@ -480,7 +480,8 @@ class AutoCompletePlantDmnd(AutoCompletePlant):
 
 
 class AutoCompletePlantCons(AutoCompletePlant):
-
+    
+    new_cols = {'set_def_cons': 0}
     def __init__(self, m):
 
         super().__init__(m)
@@ -506,7 +507,10 @@ class AutoCompletePlantCons(AutoCompletePlant):
 
         self.add_id_cols()
         self.add_zero_cols()
-
+        
+        self.df_add['set_def_cons'] = 0
+        mask_cons = self.df_add.pt.str.contains('CONS')
+        self.df_add.loc[mask_cons, 'set_def_cons'] = 1
 
 class AutoCompletePpCa(AutoComplete):
 
