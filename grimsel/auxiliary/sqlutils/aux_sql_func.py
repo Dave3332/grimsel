@@ -304,7 +304,7 @@ def write_sql_grouped(df, db, sc, tb, if_exists, by, verbose=True):
 
         dfg = dfgrpd.get_group(group)
 
-        _if_exists = if_exists if ngroup is 0 else 'append'
+        _if_exists = if_exists if ngroup == 0 else 'append'
 
         write_sql(dfg, db, sc, tb, if_exists=_if_exists)
 
@@ -338,7 +338,7 @@ def assemble_filt_sql(filt, func):
 
     filt = [list(f) if len(f) >= 3 else list(f) + [' = '] for f in filt]
     filt = [list(f) if len(f) >= 4 else list(f) + [' OR '] for f in filt]
-    filt = [f for f in filt if not len(f[1]) is 0]
+    filt = [f for f in filt if not len(f[1]) == 0]
 
     rel = {f[0]: f[2] for f in filt}
     opr = {f[0]: f[3] for f in filt}
@@ -724,9 +724,9 @@ Hit enter to proceed.
             if not (type(icol) is tuple or type(icol) is list):
                 icol = (icol,)
 
-            if len(icol) is 1: # column must be in _coldict, otherwise ill-defined
+            if len(icol) == 1: # column must be in _coldict, otherwise ill-defined
                 icol_new = (*icol, *_coldict[icol[0]])
-            elif len(icol) is 2:
+            elif len(icol) == 2:
                 icol_new = icol
             else:
                 icol_new = icol # all there
