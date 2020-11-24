@@ -1238,7 +1238,7 @@ class ModelBase(po.ConcreteModel, constraints.Constraints,
         list_name_obj = ['objective_lin', 'objective_quad', 'objective']
 
 
-        if self.results.solver.termination_condition.key == 'optimal':
+        if self.results.solver.termination_condition.value == 'optimal':
             for name_obj in list_name_obj:
                 obj = getattr(self, name_obj, False)
                 if obj and isinstance(obj, SimpleObjective) and obj.active:
