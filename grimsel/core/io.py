@@ -68,8 +68,9 @@ class _ParqWriter:
         '''
 
         if self.output_target == 'fastparquet':
-            df.to_parquet(fn, engine='fastparquet',
-                          compression='gzip',)
+            pq.write(fn, df, append=os.path.isfile(fn), compression='GZIP')
+            # df.to_parquet(fn, engine='fastparquet',
+            #               compression='gzip',)
 
 #            if 'run_id' in df.columns:
 #                df.to_parquet(fn, #append=os.path.isfile(fn),
