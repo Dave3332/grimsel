@@ -348,7 +348,7 @@ class ParamIO(CompIO):
         if df.empty:
             df = pd.DataFrame(columns=list(cols) + ['value'])
         else:
-            if not cols and len(df) is 1:
+            if not cols and len(df) == 1:
                 df = df[[0]].rename(columns={0: 'value'})
             else:
                 df.columns = list(cols) + ['value']
