@@ -7,7 +7,7 @@ Model parameters
 
 
 import pyomo.environ as po
-import pyomo.core.base.sets as poset
+import pyomo.core.base.set as poset
 from pyomo.core.base.set_types import Reals
 import itertools
 import numpy as np
@@ -222,7 +222,7 @@ class ParameterAdder:
 
         if (not flag_empty) and (self.filt_cols and self.filt_vals):
             try:
-                df = df.set_index(self.filt_cols).loc[list(self.filt_vals)]
+                df = df.set_index(self.filt_cols).reindex(index=list(self.filt_vals))
                 df = df.reset_index()
             except Exception as e:
                 logger.error(('Got error {e} when trying to filter DataFrame '
@@ -279,7 +279,7 @@ class ParameterAdder:
 
         # get list of columns from sets
         index_cols = [dict_ind[pi.getname()]
-                      if type(pi) in [poset.SimpleSet, poset.OrderedSimpleSet]
+                      if type(pi) in [poset.OrderedSimpleSet]#poset.SimpleSet,
                       else 'pp_id' # Exception: Set unions are always pp
                       for pi in self.parameter_index]
 
