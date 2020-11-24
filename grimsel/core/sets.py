@@ -7,7 +7,7 @@ Model sets
 
 
 import pyomo.environ as po
-import pyomo.core.base.sets as poset
+import pyomo.core.base.set as poset
 import pandas as pd
 import numpy as np
 
@@ -333,7 +333,7 @@ class Sets:
         df = self.df_def_plant
 
         qry = ' & '.join(['{} == 0'.format(sd)
-                         for sd in ('set_def_tr', 'set_def_dmd')
+                         for sd in ('set_def_tr', 'set_def_dmd', 'set_def_cons')
                          if sd in df.columns])
 
         self.setlst['ppall'] = (df.query(qry).pp_id.tolist())
