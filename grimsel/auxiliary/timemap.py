@@ -206,7 +206,7 @@ class TimeMap(metaclass=_UniqueInstancesMeta):
         df_time_map['dow'] = df_time_map['DateTime'].dt.weekday
         df_time_map['how'] = df_time_map['dow'] * 24 + df_time_map['hour']
         df_time_map['hom'] = (df_time_map['day'] - 1) * 24 + df_time_map['hour']
-        df_time_map['wk_id'] = df_time_map['DateTime'].dt.week - 1
+        df_time_map['wk_id'] = (df_time_map['DateTime'].dt.isocalendar().week - 1).astype(np.int64)
 
         # add number of hours per week
         df_time_map = (df_time_map
