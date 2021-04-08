@@ -5,8 +5,8 @@ Created on Tue Nov  5 21:31:46 2019
 
 @author: user
 """
-from multiprocessing import Pool
-from multiprocessing import current_process
+from multiprocess import Pool
+from multiprocess import current_process
 import contextlib
 from grimsel.core.model_loop import logger_parallel
 from grimsel import logger

@@ -2,7 +2,7 @@
 Module doc
 '''
 import os
-from multiprocessing import Lock, Pool, current_process
+from multiprocess import Lock, Pool, current_process
 import numpy as np
 import pandas as pd
 import itertools
