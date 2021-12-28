@@ -456,7 +456,7 @@ class Constraints:
 
         '''
 
-        def chp_prof_rule(model, sy, pp, ca):
+        def chp_prof_rule(self, sy, pp, ca):
             '''Produced power greater than CHP output profile.'''
 
             nd = self.mps.dict_plant_2_node_id[pp]
