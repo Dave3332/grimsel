@@ -409,17 +409,16 @@ class Constraints:
                 return (self.pwr[sy, pp, ca] <= self.cap_pwr_tot[pp, ca])
 
         has_cap_avlb = hasattr(self, 'cap_avlb')
-        self.cadd('ppst_capac',
-                  (self.sy_pp_ca - self.sy_pr_ca) | self.sy_st_ca
-                       | self.sy_hyrs_ca, rule=ppst_capac_rule)
+        self.cadd('ppst_capac', (self.sy_pp_ca - self.sy_pr_ca) | self.sy_hyrs_ca,
+                  rule=ppst_capac_rule)
 
-        def st_chg_capac_rule(self, sy, pp, ca):
-            ''' Charging power must be less than capacity. '''
-
-            return (self.pwr_st_ch[sy, pp, ca]
-                    <= self.cap_pwr_tot[pp, ca])
-
-        self.cadd('st_chg_capac', self.sy_st_ca, rule=st_chg_capac_rule)
+        def st_chg_dis_capac_rule(self, sy, pp, ca):    
+            ''' Storage sum of charging and discharging power smaller than capacity. '''
+        
+            return ((self.pwr[sy, pp, ca] + self.pwr_st_ch[sy, pp, ca])
+                        <= self.cap_pwr_tot[pp, ca])
+        
+        self.cadd('st_chg_dis_capac', self.sy_st_ca, rule=st_chg_dis_capac_rule)
 
         def st_erg_capac_rule(self, sy, pp, ca):
             ''' Stored energy must be less than energy capacity. '''
