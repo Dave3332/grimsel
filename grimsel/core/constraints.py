@@ -872,9 +872,9 @@ class Constraints:
             if (fl, nd, ca) in {**self.dict_pricebuy_pf,
                                 **self.dict_pricesll_pf}:
 
-                pprf = (self.pricesllprof if sign is -1 else self.pricebuyprof)
+                pprf = (self.pricesllprof if sign == -1 else self.pricebuyprof)
 
-                pf = (self.dict_pricesll_pf[(fl, nd, ca)] if sign is -1 else
+                pf = (self.dict_pricesll_pf[(fl, nd, ca)] if sign == -1 else
                       self.dict_pricebuy_pf[(fl, nd, ca)])
 
                 sums = (sign * sum(self.weight[tm, sy]
