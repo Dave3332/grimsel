@@ -1018,6 +1018,8 @@ class ModelBase(po.ConcreteModel, constraints.Constraints,
                 raise IndexError('map_to_time_res: Multiple tm_ids '
                                  'found for pf_ids of %s profiles.'%itb)
 
+        # Adding weight to compare with input data
+        df_hoy_soy_1 = pd.merge(self.df_hoy_soy,self.df_tm_soy[['sy','tm_id','weight']], on=['sy','tm_id'])
         ind = ['hy', 'tm_id']
         df[ind] = df[ind].astype(float)
         df = df.join(df_hoy_soy_1.set_index(ind), on=ind)
@@ -1036,7 +1038,6 @@ class ModelBase(po.ConcreteModel, constraints.Constraints,
             pf_id_lower_res = df_grp.loc[df_grp.weight > df_grp.weight_input][idx_grp].values.tolist()
         df_lower_res = df.set_index(idx_grp)
         df_lower_res = df_lower_res.loc[df_lower_res.index.isin(pf_id_lower_res)].reset_index()
-        # df_lower_res = df.loc[df.dmnd_pf_id.isin(pf_id_lower_res)]
         for i in pf_id_lower_res:
             df_lower_res = df_lower_res.set_index(idx_grp)
             df_lower_res_tmp = df_lower_res.loc[df_lower_res.index.isin([i])]
