@@ -1020,7 +1020,39 @@ class ModelBase(po.ConcreteModel, constraints.Constraints,
 
         ind = ['hy', 'tm_id']
         df[ind] = df[ind].astype(float)
-        df = df.join(self.df_hoy_soy.set_index(ind), on=ind)
+        df = df.join(df_hoy_soy_1.set_index(ind), on=ind)
+        
+        idx_grp = list(set(idx)-set(['sy']))
+        # Calculate the weight of the input data, i.e. the time resolution
+        pf_weight_input = pd.DataFrame(8760/df.groupby(idx_grp).size().rename('weight_input')).reset_index()
+        
+        df_grp = df.groupby(idx_grp + ['weight']).sum().reset_index()[idx_grp + ['weight']]
+        df_grp = pd.merge(df_grp,pf_weight_input,on=idx_grp)
+        
+        # Only selecting the data that have a lower time resolution than the input
+        if len(idx_grp) == 1:
+            pf_id_lower_res = df_grp.loc[df_grp.weight > df_grp.weight_input][idx_grp[0]].values.tolist()
+        else:
+            pf_id_lower_res = df_grp.loc[df_grp.weight > df_grp.weight_input][idx_grp].values.tolist()
+        df_lower_res = df.set_index(idx_grp)
+        df_lower_res = df_lower_res.loc[df_lower_res.index.isin(pf_id_lower_res)].reset_index()
+        # df_lower_res = df.loc[df.dmnd_pf_id.isin(pf_id_lower_res)]
+        for i in pf_id_lower_res:
+            df_lower_res = df_lower_res.set_index(idx_grp)
+            df_lower_res_tmp = df_lower_res.loc[df_lower_res.index.isin([i])]
+            weight = df_lower_res_tmp[df_lower_res_tmp.weight.notna()].weight.unique()[0]
+            df_lower_res_tmp = df_lower_res_tmp.fillna(method='ffill',limit=(int(weight)-1)).reset_index()
+            df_lower_res = df_lower_res.reset_index().set_index(idx_grp + ['hy'])
+            df_lower_res.update(df_lower_res_tmp.set_index(idx_grp + ['hy']))
+            df_lower_res = df_lower_res.reset_index()
+            logger.info('Averaging {} {}; weight={}.'.format(idx_grp,str(i),
+                                                          str(weight)))
+        
+
+        df = df.set_index(idx_grp + ['hy'])
+        df.update(df_lower_res.set_index(idx_grp + ['hy']))
+        df = df.reset_index()
+
         df = df.pivot_table(values=val, index=idx,
                             aggfunc=np.mean).reset_index()
 
