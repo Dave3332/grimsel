@@ -1017,14 +1017,19 @@ class ModelBase(po.ConcreteModel, constraints.Constraints,
             if tm_count.max() > 1:
                 raise IndexError('map_to_time_res: Multiple tm_ids '
                                  'found for pf_ids of %s profiles.'%itb)
-
+        
+        idx_grp = list(set(idx)-set(['sy']))
+        idx_dupl = idx_grp + ['hy']
+        # Check if dupplicates due to the function translate_pf_id, it can happen,
+        # e.g., solar PV in different nodes
+        df = df.drop_duplicates(subset=idx_dupl, keep="first")
+        
         # Adding weight to compare with input data
         df_hoy_soy_1 = pd.merge(self.df_hoy_soy,self.df_tm_soy[['sy','tm_id','weight']], on=['sy','tm_id'])
         ind = ['hy', 'tm_id']
         df[ind] = df[ind].astype(float)
         df = df.join(df_hoy_soy_1.set_index(ind), on=ind)
         
-        idx_grp = list(set(idx)-set(['sy']))
         # Calculate the weight of the input data, i.e. the time resolution
         pf_weight_input = pd.DataFrame(8760/df.groupby(idx_grp).size().rename('weight_input')).reset_index()
         
